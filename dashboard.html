@@ -112,16 +112,6 @@
               <div class="hb-stat-val" id="prkStatTotal">—</div>
               <div class="hb-stat-label">Total Perkara</div>
             </div>
-            <div class="hb-stat">
-              <div class="hb-stat-val" id="prkStatTahap2">—</div>
-              <div class="hb-stat-label">Menjadi Berkas (Tahap 2)</div>
-            </div>
-            <div class="hb-stat">
-              <div class="hb-stat-val" id="prkStatSp3">—</div>
-              <div class="hb-stat-label">Dihentikan (SP-3)</div>
-            </div>
-          </div>
-        </div>
 
         <!-- Filter Bar -->
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center;">
@@ -130,13 +120,6 @@
             <option value="MUNA">Kab. Muna</option>
             <option value="MUNA BARAT">Kab. Muna Barat</option>
             <option value="BUTON UTARA">Kab. Buton Utara</option>
-          </select>
-          <select id="prkFilterStatus" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
-            <option value="">Semua Status Laporan</option>
-            <option value="TAHAP 1">Tahap 1</option>
-            <option value="TAHAP 2">Tahap 2</option>
-            <option value="PENGEMBALIAN SPDP">Pengembalian SPDP</option>
-            <option value="DIHENTIKAN (SP-3)">Dihentikan (SP-3)</option>
           </select>
           <select id="prkFilterPidana" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;max-width:220px;">
             <option value="">Semua Jenis Pidana</option>
@@ -191,7 +174,7 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
                     <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
                   </svg>
-                  <h3>Legenda Status Laporan</h3>
+                  <h3>Legenda Jenis Perkara</h3>
                 </div>
               </div>
               <div id="prkLegend" style="font-size:12px;line-height:1.6;">
@@ -287,14 +270,6 @@
               <div style="font-size:12.5px;font-weight:700;color:#1a2e22;margin-bottom:8px;">⚖️ 10 Jenis Pidana Terbanyak</div>
               <div style="position:relative;height:280px;">
                 <canvas id="prkChartPidana"></canvas>
-              </div>
-            </div>
-
-            <!-- Distribusi Status Laporan -->
-            <div style="background:#f8faf9;border-radius:12px;padding:14px;">
-              <div style="font-size:12.5px;font-weight:700;color:#1a2e22;margin-bottom:8px;">📌 Distribusi Status Laporan</div>
-              <div style="position:relative;height:260px;display:flex;align-items:center;justify-content:center;">
-                <canvas id="prkChartStatus"></canvas>
               </div>
             </div>
 
