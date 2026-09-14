@@ -190,36 +190,59 @@ async function fetchPrkData() {
 
 function initPrkMap() {
   if (prkMap) {
-    setTimeout(() => {
-      prkMap.invalidateSize(true);
-      prkMap.fitBounds(PRK_BOUNDS);
-    }, 150);
+    prkMap.invalidateSize(true);
+    prkMap.fitBounds(PRK_BOUNDS);
     return;
   }
 
   const mapContainer = document.getElementById('prkMap');
   if (!mapContainer) return;
 
-  prkMap = L.map('prkMap', {
-    maxBounds: PRK_BOUNDS,
-    maxBoundsViscosity: 1.0,
-    minZoom: 8,
-    maxZoom: 16
-  }).setView(PRK_CENTER, 9);
+  // Jika library Leaflet gagal dimuat (CDN diblokir jaringan/firewall, offline, dsb),
+  // sebelumnya ini gagal diam-diam: peta dan tabel/legenda tetap terisi (data
+  // datang dari Google Sheets), tapi kotak peta kosong tanpa pesan apa pun.
+  // Sekarang munculkan error yang jelas agar mudah didiagnosis.
+  if (typeof L === 'undefined') {
+    prkShowError('Library peta (Leaflet) gagal dimuat. Periksa koneksi internet atau apakah domain <b>unpkg.com</b> diblokir oleh jaringan/firewall, lalu muat ulang halaman.');
+    return;
+  }
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors',
-    bounds: PRK_BOUNDS
-  }).addTo(prkMap);
+  try {
+    prkMap = L.map('prkMap', {
+      maxBounds: PRK_BOUNDS,
+      maxBoundsViscosity: 1.0,
+      minZoom: 8,
+      maxZoom: 16
+    }).setView(PRK_CENTER, 9);
 
-  prkMarkersLayer = L.layerGroup().addTo(prkMap);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      bounds: PRK_BOUNDS
+    }).addTo(prkMap);
 
-  setTimeout(() => {
-    if (prkMap) {
-      prkMap.invalidateSize(true);
-      prkMap.fitBounds(PRK_BOUNDS);
+    prkMarkersLayer = L.layerGroup().addTo(prkMap);
+
+    // ResizeObserver menggantikan setTimeout dengan angka ajaib (150ms/300ms):
+    // peta akan invalidateSize() setiap kali ukuran sebenarnya dari #prkMap
+    // berubah (mis. saat layout/flex/font masih menata), bukan menebak durasinya.
+    if ('ResizeObserver' in window) {
+      const ro = new ResizeObserver(() => {
+        if (prkMap) prkMap.invalidateSize(true);
+      });
+      ro.observe(mapContainer);
     }
-  }, 300);
+    window.addEventListener('resize', () => { if (prkMap) prkMap.invalidateSize(true); });
+
+    requestAnimationFrame(() => {
+      if (prkMap) {
+        prkMap.invalidateSize(true);
+        prkMap.fitBounds(PRK_BOUNDS);
+      }
+    });
+  } catch (e) {
+    console.error('Gagal inisialisasi peta:', e);
+    prkShowError('Gagal menampilkan peta: ' + e.message);
+  }
 }
 
 function prkCreateIcon(color, count) {
@@ -355,11 +378,11 @@ function renderPrkLegend(data) {
     return;
   }
 
-  legendEl.innerHTML = pidanaSet.map(p => {
+  legendEl.innerHTML = pidanaSet.map((p, i) => {
     const color = getPidanaColor(p);
     const count = data.filter(d => d.pidana === p).length;
     return `
-      <div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.04);">
+      <div class="prk-stagger" style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.04);animation-delay:${Math.min(i * 30, 400)}ms;">
         <div style="width:12px;height:12px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${color};flex-shrink:0;"></div>
         <span style="flex:1;color:#1a2e22;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${prkEsc(p)}">${prkEsc(p)}</span>
         <span style="color:#8a9490;font-weight:600;">${count}</span>
@@ -386,8 +409,8 @@ function renderPrkTable(data) {
   const rows = shown.map((d, i) => {
     const color = getPidanaColor(d.pidana);
     return `
-      <div onclick="prkTableItemClick(${i})"
-           style="padding:8px 10px;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;transition:background .15s;"
+      <div class="prk-stagger" onclick="prkTableItemClick(${i})"
+           style="padding:8px 10px;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;transition:background .15s;animation-delay:${i * 60}ms;"
            onmouseover="this.style.background='rgba(11,61,46,0.04)'"
            onmouseout="this.style.background=''">
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
@@ -452,9 +475,23 @@ function prkTableItemClick(i) {
   }
 }
 
+function prkCountUp(el, to, duration = 700) {
+  if (!el) return;
+  const from = parseInt(el.textContent, 10) || 0;
+  if (from === to) { el.textContent = to; return; }
+  const start = performance.now();
+  const ease = t => 1 - Math.pow(1 - t, 3);
+  function step(now) {
+    const p = Math.min((now - start) / duration, 1);
+    el.textContent = Math.round(from + (to - from) * ease(p));
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
 function updatePrkStats(data) {
-  const totalEl  = document.getElementById('prkStatTotal');
-  if (totalEl)  totalEl.textContent  = data.length;
+  const totalEl = document.getElementById('prkStatTotal');
+  if (totalEl) prkCountUp(totalEl, data.length);
 }
 
 let prkChartKecamatan = null;
@@ -644,12 +681,9 @@ async function loadPrkData() {
       <div style="color:#8a9490;font-size:13px;">Memuat peta dan data perkara...</div>
     `;
   }
-  if (tabelEl) tabelEl.innerHTML = '<div style="color:#aaa;text-align:center;padding:20px;">Memuat data...</div>';
+  if (tabelEl) tabelEl.innerHTML = Array(3).fill('<div class="prk-skel"></div><div class="prk-skel" style="width:60%;"></div>').join('<div style="height:10px"></div>');
 
-  // Beri jeda agar flexbox selesai menata elemen sebelum Leaflet menghitung ukuran peta
-  setTimeout(() => {
-    initPrkMap();
-  }, 50);
+  initPrkMap();
 
   try {
     const data = await fetchPrkData();
@@ -657,12 +691,10 @@ async function loadPrkData() {
 
     if (loadingMap) loadingMap.style.display = 'none';
 
-    setTimeout(() => {
-      if (prkMap) {
-        prkMap.invalidateSize(true);
-        prkMap.fitBounds(PRK_BOUNDS);
-      }
-    }, 150);
+    if (prkMap) {
+      prkMap.invalidateSize(true);
+      prkMap.fitBounds(PRK_BOUNDS);
+    }
 
     prkPopulatePidanaFilter(data);
     prkPopulateTahunFilter(data);
