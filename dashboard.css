@@ -452,10 +452,15 @@ button{font-family:inherit; cursor:pointer; border:none; background:none;}
 .prk-marker:hover {
   transform: scale(1.15);
 }
-/* Paksakan elemen peta Leaflet agar mengisi penuh kontainer tanpa area abu-abu */
+/* Menghilangkan sisa area abu-abu pada peta Leaflet */
+.panel:has(#prkMap) {
+  display: flex;
+  flex-direction: column;
+}
 #prkMap {
   width: 100% !important;
   max-width: 100% !important;
+  flex: 1;
 }
 .leaflet-container {
   width: 100% !important;
