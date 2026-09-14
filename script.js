@@ -4,13 +4,9 @@
 // GANTI TEKS DI BAWAH DENGAN URL WEB APP ANDA YANG BARU DISALIN
 const API_URL = "https://script.google.com/macros/s/AKfycbyPeZfGfmNTLfqc8vbOJOYgGijrrnCnEtPbe65ulZ3YljY7YuksZEj_aI0O11QQ92pR/exec";
 
-const EYE_OPEN = '<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/>';
-const EYE_OFF  = '<path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-7-11-7a19.9 19.9 0 0 1 5.17-5.66M9.9 4.24A10.6 10.6 0 0 1 12 4c7 0 11 7 11 7a19.9 19.9 0 0 1-2.6 3.53M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
-
 document.addEventListener("DOMContentLoaded", () => {
 
   createLights();
-  startLiveClock();
 
   const loginForm = document.getElementById("loginForm");
   if (!loginForm) return;
@@ -20,11 +16,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (toggle && passwordInput) {
     toggle.addEventListener("click", () => {
-      const showing = passwordInput.type === "text";
-      passwordInput.type = showing ? "password" : "text";
-      toggle.setAttribute("aria-pressed", String(!showing));
-      toggle.setAttribute("aria-label", showing ? "Tampilkan kata sandi" : "Sembunyikan kata sandi");
-      toggle.querySelector("svg").innerHTML = showing ? EYE_OPEN : EYE_OFF;
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        toggle.textContent = "🙈";
+      } else {
+        passwordInput.type = "password";
+        toggle.textContent = "👁";
+      }
     });
   }
 
@@ -34,10 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
-    const btn = document.getElementById("submitBtn") || loginForm.querySelector("button");
-    const label = btn.querySelector(".btn-label") || btn;
+    const btn = loginForm.querySelector("button");
 
-    setBtnState(label, btn, 'loading', 'Memeriksa...');
+    btn.textContent = "Memeriksa...";
+    btn.disabled = true;
 
     try {
       const res = await fetch(API_URL, {
@@ -58,57 +56,45 @@ document.addEventListener("DOMContentLoaded", () => {
           loginTime: Date.now()
         }));
 
-        setBtnState(label, btn, 'success', 'Akses Diterima');
+        btn.textContent = "Akses Diterima";
         setTimeout(() => {
           window.location.href = "dashboard.html";
         }, 700);
 
       } else {
-        setBtnState(label, btn, 'error', 'Login Gagal');
+        btn.textContent = "Login Gagal";
         btn.disabled = false;
         setTimeout(() => {
-          setBtnState(label, btn, 'idle', 'Masuk ke Sistem');
+          btn.textContent = "Masuk ke Sistem";
         }, 1500);
       }
 
     } catch (err) {
       console.error("LOGIN ERROR:", err);
-      setBtnState(label, btn, 'error', 'Server Error');
+      btn.textContent = "Server Error";
       btn.disabled = false;
       setTimeout(() => {
-        setBtnState(label, btn, 'idle', 'Masuk ke Sistem');
+        btn.textContent = "Masuk ke Sistem";
       }, 2000);
     }
   });
 
 });
 
-function setBtnState(label, btn, state, text) {
-  btn.disabled = state === 'loading' || state === 'success';
-  if (state === 'loading') {
-    label.innerHTML = `<span class="btn-spinner"></span><span>${text}</span>`;
-  } else {
-    label.innerHTML = `<span>${text}</span>`;
-  }
-}
-
-function startLiveClock() {
-  const el = document.getElementById("liveClock");
-  if (!el) return;
-  const fmt = () => new Date().toLocaleString('id-ID', {
-    weekday: 'long', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', second: '2-digit'
-  });
-  el.textContent = fmt();
-  setInterval(() => { el.textContent = fmt(); }, 1000);
-}
-
 function createLights() {
-  for (let i = 0; i < 16; i++) {
+  const bg = document.querySelector('.login-bg');
+  if (!bg) return;
+  for (let i = 0; i < 20; i++) { // Ditingkatkan menjadi 20 partikel
     const l = document.createElement("div");
-    l.className = "light" + (i % 3 === 0 ? " light-g" : "");
-    l.style.left = Math.random() * 100 + "vw";
-    l.style.animationDuration = (8 + Math.random() * 10) + "s";
+    l.className = "light";
+    l.style.left = (Math.random() * 100) + "vw";
+    
+    // Memberikan pergeseran acak secara horizontal (kiri atau kanan)
+    const driftAmount = (Math.random() * 120 - 60) + "px";
+    l.style.setProperty('--drift', driftAmount);
+    
+    l.style.animationDuration = (10 + Math.random() * 15) + "s";
     l.style.animationDelay = (Math.random() * 8) + "s";
-    document.body.appendChild(l);
+    bg.appendChild(l);
   }
 }
