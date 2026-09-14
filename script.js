@@ -1,14 +1,11 @@
-
 // ===============================
-// KONFIGURASI AKSES SPREADSHEET LOGIN
+// KONFIGURASI API LOGIN (Apps Script Web App)
 // ===============================
-const SHEET_ID = '1VOZUFvj042hHXFejLHXjQg7FVO3otDNV_L3UGAnrhCQ';
-const AKSES_GID = '2115410969'; // Menggunakan GID agar tepat sasaran ke sheet "akses"
-const AKSES_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${AKSES_GID}`;
+// GANTI TEKS DI BAWAH DENGAN URL WEB APP ANDA YANG BARU DISALIN
+const API_URL = "https://script.google.com/macros/s/1sf0Ec32gw6fMyxIRGN3FhQyDyZtdKTCtB9vP_6W_b-mgC06FtPZfHXCO/exec";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // Efek partikel cahaya di background halaman login
   createLights();
 
   const loginForm = document.getElementById("loginForm");
@@ -17,9 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const passwordInput = document.getElementById("password");
   const toggle = document.getElementById("togglePassword");
 
-  // ===============================
-  // TOGGLE TAMPIL/SEMBUNYI PASSWORD
-  // ===============================
   if (toggle && passwordInput) {
     toggle.addEventListener("click", () => {
       if (passwordInput.type === "password") {
@@ -32,9 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ===============================
-  // PROSES LOGIN VIA SPREADSHEET GVIZ
-  // ===============================
+  // PROSES LOGIN POST KE APPS SCRIPT
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -46,54 +38,18 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.disabled = true;
 
     try {
-      // Ambil data JSON dari sheet 'Akses'
-      const res = await fetch(AKSES_URL);
-      const text = await res.text();
-      
-      // Bersihkan response agar menjadi JSON valid
-      const cleanText = text.replace(/^[^(]+\(/, '').replace(/\);\s*$/, '');
-      const json = JSON.parse(cleanText);
-      
-      const cols = json.table.cols;
-      const rows = json.table.rows;
-
-      // Cari indeks kolom berdasarkan nama headernya
-      let userColIdx = -1;
-      let passColIdx = -1;
-      
-      cols.forEach((col, idx) => {
-        if (col.label) {
-          const label = col.label.toLowerCase().trim();
-          if (label === 'username') userColIdx = idx;
-          if (label === 'password') passColIdx = idx;
-        }
+      const res = await fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({ username, password })
       });
 
-      if (userColIdx === -1 || passColIdx === -1) {
-        throw new Error("Header 'username' atau 'password' tidak ditemukan di sheet Akses.");
-      }
+      const data = await res.json();
 
-      let isValid = false;
-      let userRole = "Intelijen"; // Default
-
-      // Verifikasi baris per baris
-      for (let row of rows) {
-        if (row.c && row.c[userColIdx] && row.c[passColIdx]) {
-          const sheetUser = String(row.c[userColIdx].v).trim();
-          const sheetPass = String(row.c[passColIdx].v).trim();
-          
-          if (sheetUser === username && sheetPass === password) {
-            isValid = true;
-            break;
-          }
-        }
-      }
-
-      if (isValid) {
+      if (data.status === "success") {
         localStorage.setItem("intel_session", JSON.stringify({
-          username: username,
-          role: userRole,
-          token: "spreadsheet-auth-" + Date.now(),
+          username: data.username,
+          role: data.role,
+          token: data.token,
           loginTime: Date.now()
         }));
 
@@ -122,9 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-// ===============================
-// EFEK PARTIKEL CAHAYA (dekorasi latar)
-// ===============================
 function createLights() {
   for (let i = 0; i < 15; i++) {
     const l = document.createElement("div");
