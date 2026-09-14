@@ -190,7 +190,14 @@ async function fetchPrkData() {
 }
 
 function initPrkMap() {
-  if (prkMap) return;
+  if (prkMap) {
+    setTimeout(() => {
+      prkMap.invalidateSize(true);
+      prkMap.fitBounds(PRK_BOUNDS);
+    }, 100);
+    return;
+  }
+
   prkMap = L.map('prkMap', {
     maxBounds: PRK_BOUNDS,
     maxBoundsViscosity: 1.0,
@@ -203,8 +210,15 @@ function initPrkMap() {
     bounds: PRK_BOUNDS
   }).addTo(prkMap);
 
-  prkMap.fitBounds(PRK_BOUNDS);
   prkMarkersLayer = L.layerGroup().addTo(prkMap);
+
+  // Paksa render ulang ukuran penuh agar area abu-abu hilang secara total
+  setTimeout(() => {
+    if (prkMap) {
+      prkMap.invalidateSize(true);
+      prkMap.fitBounds(PRK_BOUNDS);
+    }
+  }, 250);
 }
 
 function prkCreateIcon(color, count) {
@@ -802,35 +816,3 @@ if (_prkSearchEl) {
 }
 
 document.addEventListener('DOMContentLoaded', loadPrkData);
-function initPrkMap() {
-  if (prkMap) {
-    // Jika peta sudah ada, langsung paksa perbarui ukurannya
-    setTimeout(() => {
-      prkMap.invalidateSize(true);
-      prkMap.fitBounds(PRK_BOUNDS);
-    }, 50);
-    return;
-  }
-
-  prkMap = L.map('prkMap', {
-    maxBounds: PRK_BOUNDS,
-    maxBoundsViscosity: 1.0,
-    minZoom: 8,
-    maxZoom: 16
-  }).setView(PRK_CENTER, 9);
-
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors',
-    bounds: PRK_BOUNDS
-  }).addTo(prkMap);
-
-  prkMarkersLayer = L.layerGroup().addTo(prkMap);
-
-  // Paksa render ulang ukuran dan batas wilayah setelah elemen benar-benar siap
-  setTimeout(() => {
-    if (prkMap) {
-      prkMap.invalidateSize(true);
-      prkMap.fitBounds(PRK_BOUNDS);
-    }
-  }, 200);
-}
