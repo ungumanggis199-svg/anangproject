@@ -40,8 +40,13 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const res = await fetch(API_URL, {
         method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
         body: JSON.stringify({ username, password })
       });
+
+      const data = await res.json();
 
       const data = await res.json();
 
