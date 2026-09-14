@@ -48,8 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = await res.json();
 
-      const data = await res.json();
-
       if (data.status === "success") {
         localStorage.setItem("intel_session", JSON.stringify({
           username: data.username,
