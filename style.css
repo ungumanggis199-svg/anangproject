@@ -267,14 +267,80 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 
 /* ---- RIGHT: LOGIN FORM ---- */
 .login-right{
+  position:relative;
+  overflow:hidden;
   display:flex;
   align-items:center;
   justify-content:center;
   padding:32px;
-  background:var(--paper);
+  /* Menggunakan gradien halus agar tidak sekadar warna solid */
+  background:radial-gradient(circle at top right, #ffffff 0%, var(--paper) 100%);
 }
 
+/* Ornamen Kanan: Pattern Titik (Subtle Dots) */
+.right-bg-pattern {
+  position:absolute;
+  inset:0;
+  opacity:0.6;
+  background-image:radial-gradient(rgba(11,61,46,0.07) 1.5px, transparent 1.5px);
+  background-size:28px 28px;
+  z-index:0;
+}
+
+/* Ornamen Kanan: Bercak Warna Melayang (Glow Blobs) */
+.right-blob {
+  position:absolute;
+  z-index:1;
+  border-radius:50%;
+  filter:blur(50px);
+  animation:floatBlob 12s infinite ease-in-out alternate;
+}
+.rb-1 {
+  width:380px; height:380px;
+  background:rgba(46,154,107,0.12);
+  top:-100px; right:-80px;
+  animation-duration:14s;
+}
+.rb-2 {
+  width:280px; height:280px;
+  background:rgba(184,144,46,0.10);
+  bottom:-60px; left:-80px;
+  animation-duration:18s;
+  animation-direction:alternate-reverse;
+}
+@keyframes floatBlob {
+  0% { transform:translate(0, 0) scale(1); }
+  100% { transform:translate(-40px, 30px) scale(1.1); }
+}
+
+/* Ornamen Kanan: Garis Geometris Berputar */
+.right-shape {
+  position:absolute;
+  border:1.5px dashed rgba(11,61,46,0.12);
+  border-radius:50%;
+  z-index:1;
+  animation:spinShape 30s linear infinite;
+}
+.rs-1 {
+  width:550px; height:550px;
+  top:-200px; right:-200px;
+}
+.rs-2 {
+  width:300px; height:300px;
+  bottom:-100px; left:-120px;
+  border-color:rgba(184,144,46,0.15);
+  animation-direction:reverse;
+  animation-duration:25s;
+}
+@keyframes spinShape {
+  from { transform:rotate(0deg); }
+  to { transform:rotate(360deg); }
+}
+
+/* Pastikan kartu login berada di atas semua ornamen */
 .glass-card{
+  position:relative;
+  z-index:10; 
   width:100%;
   max-width:400px;
   background:rgba(255,255,255,.92);
