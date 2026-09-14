@@ -12,7 +12,6 @@ const PRK_GVIZ_URL  = `https://docs.google.com/spreadsheets/d/${PRK_SHEET_ID}/gv
 const PRK_BOUNDS = [[-5.85, 121.85], [-3.95, 123.35]];
 const PRK_CENTER = [-4.95, 122.55];
 
-// Palet Warna Dinamis untuk Jenis Pidana
 const PRK_PIDANA_COLORS = {};
 let prkColorIndex = 0;
 const PIDANA_PALETTE = [
@@ -194,9 +193,12 @@ function initPrkMap() {
     setTimeout(() => {
       prkMap.invalidateSize(true);
       prkMap.fitBounds(PRK_BOUNDS);
-    }, 100);
+    }, 150);
     return;
   }
+
+  const mapContainer = document.getElementById('prkMap');
+  if (!mapContainer) return;
 
   prkMap = L.map('prkMap', {
     maxBounds: PRK_BOUNDS,
@@ -644,6 +646,7 @@ async function loadPrkData() {
   }
   if (tabelEl) tabelEl.innerHTML = '<div style="color:#aaa;text-align:center;padding:20px;">Memuat data...</div>';
 
+  // Inisialisasi peta segera di awal agar ukuran kontainer terdaftar sebelum data ditarik
   initPrkMap();
 
   try {
@@ -652,11 +655,13 @@ async function loadPrkData() {
 
     if (loadingMap) loadingMap.style.display = 'none';
 
+    // Paksa Leaflet menyegarkan ukuran peta setelah loading selesai
     setTimeout(() => {
       if (prkMap) {
         prkMap.invalidateSize(true);
+        prkMap.fitBounds(PRK_BOUNDS);
       }
-    }, 100);
+    }, 150);
 
     prkPopulatePidanaFilter(data);
     prkPopulateTahunFilter(data);
