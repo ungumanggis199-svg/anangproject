@@ -1,9 +1,10 @@
+
 // ===============================
 // KONFIGURASI AKSES SPREADSHEET LOGIN
 // ===============================
 const SHEET_ID = '1VOZUFvj042hHXFejLHXjQg7FVO3otDNV_L3UGAnrhCQ';
-const AKSES_SHEET_NAME = 'Akses';
-const AKSES_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${AKSES_SHEET_NAME}`;
+const AKSES_GID = '2115410969'; // Menggunakan GID agar tepat sasaran ke sheet "akses"
+const AKSES_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${AKSES_GID}`;
 
 document.addEventListener("DOMContentLoaded", () => {
 
