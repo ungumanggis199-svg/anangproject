@@ -2,7 +2,7 @@
 // KONFIGURASI API LOGIN (Apps Script Web App)
 // ===============================
 // GANTI TEKS DI BAWAH DENGAN URL WEB APP ANDA YANG BARU DISALIN
-const API_URL = "https://script.google.com/macros/s/1sf0Ec32gw6fMyxIRGN3FhQyDyZtdKTCtB9vP_6W_b-mgC06FtPZfHXCO/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyPeZfGfmNTLfqc8vbOJOYgGijrrnCnEtPbe65ulZ3YljY7YuksZEj_aI0O11QQ92pR/exec";
 
 document.addEventListener("DOMContentLoaded", () => {
 
