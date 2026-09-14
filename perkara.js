@@ -13,11 +13,14 @@
    Kordinat ("lat, lng") | ... | Status
    ===================================================== */
 
-const PRK_SHEET_ID = '1DDDpmHEggIPK1soU1R0jA8CwHnsqjVwePfmTA0JQt0Q';
-const PRK_GID       = '38313220';
-const PRK_CSV_URL   = `https://docs.google.com/spreadsheets/d/${PRK_SHEET_ID}/gviz/tq?tqx=out:csv&gid=${PRK_GID}`;
-const PRK_GVIZ_URL  = `https://docs.google.com/spreadsheets/d/${PRK_SHEET_ID}/gviz/tq?tqx=out:json&gid=${PRK_GID}`;
+// =====================================================
+// KONFIGURASI SPREADSHEET (DATA PERKARA)
+// =====================================================
+const PRK_SHEET_ID  = '1VOZUFvj042hHXFejLHXjQg7FVO3otDNV_L3UGAnrhCQ';
+const PRK_SHEET_NAME = 'Data%20Perkara'; // %20 adalah spasi pada URL
 
+const PRK_CSV_URL   = `https://docs.google.com/spreadsheets/d/${PRK_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${PRK_SHEET_NAME}`;
+const PRK_GVIZ_URL  = `https://docs.google.com/spreadsheets/d/${PRK_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${PRK_SHEET_NAME}`;
 // Batas wilayah Pulau Muna & Pulau Buton
 const PRK_BOUNDS = [
   [-5.85, 121.85],
