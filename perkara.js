@@ -631,18 +631,24 @@ async function loadPrkData() {
       <div style="color:#8a9490;font-size:13px;">Memuat peta dan data perkara...</div>
     `;
   }
-  if (mapEl) mapEl.style.display = 'none';
-  if (tabelEl) tabelEl.innerHTML = '<div style="color:#aaa;text-align:center;padding:20px;">Memuat data...</div>';
-
-  try {
-    const data = await fetchPrkData();
-    prkAllData = data;
-
-    if (mapEl) mapEl.style.display = 'block';
+if (mapEl) mapEl.style.display = 'block';
     if (loadingMap) loadingMap.style.display = 'none';
 
     initPrkMap();
-    setTimeout(() => { if (prkMap) prkMap.invalidateSize(); }, 100);
+    
+    // PERBAIKAN: Memaksa peta mendeteksi ulang ukuran container agar full tanpa sisa abu-abu
+    setTimeout(() => { 
+      if (prkMap) {
+        prkMap.invalidateSize(true);
+        prkMap.fitBounds(PRK_BOUNDS);
+      }
+    }, 100);
+
+    setTimeout(() => { 
+      if (prkMap) {
+        prkMap.invalidateSize(true);
+      }
+    }, 500);
 
     prkPopulatePidanaFilter(data);
     prkPopulateTahunFilter(data);
