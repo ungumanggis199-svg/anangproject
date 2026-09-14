@@ -419,7 +419,7 @@ function renderPrkTable(data) {
     return;
   }
 
-  const PRK_LIST_LIMIT = 3;
+  const PRK_LIST_LIMIT = 2;
   const shown = data.slice(0, PRK_LIST_LIMIT);
   const sisa  = data.length - shown.length;
 
