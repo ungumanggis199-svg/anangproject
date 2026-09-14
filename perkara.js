@@ -816,3 +816,34 @@ if (_prkSearchEl) {
 }
 
 document.addEventListener('DOMContentLoaded', loadPrkData);
+function initPrkMap() {
+  if (prkMap) {
+    setTimeout(() => {
+      prkMap.invalidateSize(true);
+      prkMap.fitBounds(PRK_BOUNDS);
+    }, 100);
+    return;
+  }
+
+  prkMap = L.map('prkMap', {
+    maxBounds: PRK_BOUNDS,
+    maxBoundsViscosity: 1.0,
+    minZoom: 8,
+    maxZoom: 16
+  }).setView(PRK_CENTER, 9);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    bounds: PRK_BOUNDS
+  }).addTo(prkMap);
+
+  prkMap.fitBounds(PRK_BOUNDS);
+  prkMarkersLayer = L.layerGroup().addTo(prkMap);
+
+  setTimeout(() => {
+    if (prkMap) {
+      prkMap.invalidateSize(true);
+      prkMap.fitBounds(PRK_BOUNDS);
+    }
+  }, 250);
+}
