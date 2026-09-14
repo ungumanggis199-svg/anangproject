@@ -148,6 +148,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   display:flex;
   flex-direction:column;
   justify-content:center;
+  align-items:center; /* Menengahkan konten secara horizontal */
+  text-align:center;  /* Menengahkan teks */
   padding:64px 72px;
   position:relative;
   overflow:hidden;
@@ -169,8 +171,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   border:1px solid rgba(228,199,122,.14);
 }
 
-/* lambang besar, transparan, statis — kesan dokumen resmi/berkeamanan,
-   bukan dekorasi yang bergerak (lambang instansi tidak diputar/dianimasikan) */
+/* lambang besar, transparan, statis */
 .brand-watermark{
   position:absolute;
   right:-60px;bottom:-70px;
@@ -181,21 +182,22 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   pointer-events:none;
 }
 
-.logo-wrapper{margin-bottom:32px;position:relative;z-index:2;}
+.logo-wrapper{margin-bottom:28px;position:relative;z-index:2;}
 .kejaksaan-logo{
-  width:76px;height:76px;
+  width:115px;  /* Logo diperbesar dari 76px */
+  height:115px; /* Logo diperbesar dari 76px */
   object-fit:contain;
   filter:drop-shadow(0 4px 14px rgba(0,0,0,.35));
 }
 
 .eyebrow{
   font-family:'Space Mono',monospace;
-  font-size:11px;
+  font-size:13px; /* Diperbesar dari 11px */
   letter-spacing:.18em;
   text-transform:uppercase;
   color:var(--gold-lt);
   opacity:.9;
-  margin-bottom:14px;
+  margin-bottom:16px;
   position:relative;
   z-index:2;
 }
@@ -203,8 +205,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .login-left h1{
   font-family:'Fraunces',serif;
   font-weight:600;
-  font-size:44px;
-  line-height:1.08;
+  font-size:56px; /* Diperbesar dari 44px */
+  line-height:1.1;
   letter-spacing:-.01em;
   margin-bottom:18px;
   position:relative;
@@ -212,33 +214,34 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 }
 
 .login-left .sub{
-  font-size:14.5px;
-  color:rgba(255,255,255,.68);
-  margin-bottom:40px;
+  font-size:17px; /* Diperbesar dari 14.5px */
+  color:rgba(255,255,255,.8);
+  margin-bottom:48px;
   position:relative;
   z-index:2;
 }
 
 .security-note{
-  font-size:12.5px;
+  font-size:14px; /* Diperbesar dari 12.5px */
   line-height:1.65;
-  color:rgba(255,255,255,.6);
-  border-left:2px solid var(--gold);
-  padding:4px 0 4px 16px;
-  max-width:380px;
+  color:rgba(255,255,255,.65);
+  /* Posisi garis (border) dipindah ke atas agar rapi dengan teks center */
+  border-top:2px solid var(--gold);
+  border-left:none;
+  padding:20px 0 0 0; 
+  max-width:440px;
   position:relative;
   z-index:2;
 }
 
-/* baris status: elemen "hidup" yang sungguhan (jam berjalan), bukan
-   sekadar hiasan — cocok untuk sistem pemantauan/intelijen */
 .brand-status{
   display:flex;
   align-items:center;
+  justify-content:center; /* Menengahkan elemen status */
   gap:8px;
-  margin-top:28px;
+  margin-top:36px;
   font-family:'Space Mono',monospace;
-  font-size:11px;
+  font-size:12.5px; /* Diperbesar dari 11px */
   letter-spacing:.02em;
   color:rgba(255,255,255,.5);
   position:relative;
