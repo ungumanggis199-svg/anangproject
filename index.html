@@ -21,23 +21,29 @@
 
   <!-- LEFT BRAND -->
   <section class="login-left">
-    <!-- Ornamen Geometris Melayang -->
-    <div class="ornament ornament-1"></div>
-    <div class="ornament ornament-2"></div>
-    <div class="ornament ornament-3"></div>
 
-    <div class="logo-wrapper">
-      <img src="Logo-Kejaksaan2.png" class="kejaksaan-logo" alt="Logo Kejaksaan" onerror="this.style.display='none'">
+    <!-- watermark lambang, statis & senyap - kesan dokumen resmi/keamanan -->
+    <img src="Logo-Kejaksaan2.png" class="brand-watermark" alt="" aria-hidden="true">
+
+    <div class="logo-wrapper reveal" style="--d:0s">
+      <img src="Logo-Kejaksaan2.png" class="kejaksaan-logo" alt="Logo Kejaksaan">
     </div>
 
-    <p class="eyebrow">Sistem Informasi Intelijen</p>
-    <h1>Data Perkara<br>SPDP</h1>
-    <p class="sub">
+    <p class="eyebrow reveal" style="--d:.08s">Sistem Informasi Intelijen</p>
+    <h1 class="reveal" style="--d:.16s">Data Perkara<br>SPDP</h1>
+    <p class="sub reveal" style="--d:.26s">
       Kejaksaan Negeri Muna &middot; Bidang Intelijen
     </p>
 
-    <div class="security-note">
+    <div class="security-note reveal" style="--d:.36s">
       Sistem ini digunakan untuk pengelolaan data perkara (SPDP) secara terbatas dan terenkripsi. Akses hanya untuk personel yang berwenang.
+    </div>
+
+    <div class="brand-status reveal" style="--d:.46s">
+      <span class="status-dot"></span>
+      <span>Sistem aktif</span>
+      <span class="status-sep">&middot;</span>
+      <span id="liveClock" class="status-clock">&nbsp;</span>
     </div>
 
   </section>
@@ -45,7 +51,7 @@
   <!-- RIGHT LOGIN FORM -->
   <section class="login-right">
 
-    <div class="glass-card">
+    <div class="glass-card reveal" style="--d:.2s">
 
       <h2>Masuk Sistem</h2>
       <p class="desc">Silakan login menggunakan NIP atau username resmi.</p>
@@ -53,13 +59,18 @@
       <form id="loginForm">
 
         <label for="username">Username</label>
-        <input type="text" id="username" placeholder="Masukkan NIP / Username" required autocomplete="username">
+        <div class="field-wrapper">
+          <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <input type="text" id="username" placeholder="Masukkan NIP / Username" required autocomplete="username">
+        </div>
 
         <label for="password">Password</label>
-
-        <div class="password-wrapper">
+        <div class="field-wrapper password-wrapper">
+          <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           <input type="password" id="password" placeholder="Masukkan kata sandi" required autocomplete="current-password">
-          <span id="togglePassword" role="button" aria-label="Tampilkan kata sandi">&#128065;</span>
+          <button type="button" id="togglePassword" class="toggle-eye" aria-label="Tampilkan kata sandi" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
         </div>
 
         <div class="row">
@@ -71,8 +82,8 @@
           <a href="#" class="link-muted">Lupa password?</a>
         </div>
 
-        <button type="submit">
-          Masuk ke Sistem
+        <button type="submit" id="submitBtn">
+          <span class="btn-label">Masuk ke Sistem</span>
         </button>
 
       </form>
