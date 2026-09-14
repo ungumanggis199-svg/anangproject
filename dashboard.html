@@ -149,24 +149,20 @@
           <span id="prkLastUpdate" style="font-size:11.5px;color:#8a9490;margin-left:4px;font-weight:500;"></span>
         </div>
 
-<!-- Map + Sidebar Layout -->
-<div style="display:flex;gap:16px;align-items:start;width:100%;">
+<!-- Map + Sidebar Layout yang Diperbaiki -->
+        <div style="display:grid;grid-template-columns: 1fr 340px;gap:16px;align-items:start;width:100%;margin-bottom:16px;">
 
-  <!-- Leaflet Map Container -->
-  <div class="panel" style="padding:0;overflow:hidden;border-radius:14px;border:1px solid rgba(11,61,46,0.12);flex:1;min-width:0;position:relative;">
-    <div id="prkLoadingMap" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#f8faf9;z-index:10;">
-      <div style="width:36px;height:36px;border:3px solid rgba(11,61,46,0.15);border-top-color:#0B3D2E;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
-      <div style="color:#8a9490;font-size:13px;">Memuat peta dan data perkara...</div>
-    </div>
-    <div id="prkMap" style="width:100%; height:520px; z-index:1;"></div>
-  </div>
+          <!-- Leaflet Map Container -->
+          <div class="panel" style="padding:0;overflow:hidden;border-radius:14px;border:1px solid rgba(11,61,46,0.12);position:relative;width:100%;">
+            <div id="prkLoadingMap" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#f8faf9;z-index:10;">
+              <div style="width:36px;height:36px;border:3px solid rgba(11,61,46,0.15);border-top-color:#0B3D2E;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+              <div style="color:#8a9490;font-size:13px;">Memuat peta dan data perkara...</div>
+            </div>
+            <div id="prkMap" style="width:100%; height:520px; z-index:1;"></div>
+          </div>
 
-  <!-- Sidebar Kanan: Legend + Table -->
-  <div style="width:340px;min-width:340px;display:flex;flex-direction:column;gap:16px;">
-    <!-- Kategori Pidana & Daftar Terbaru -->
-  </div>
-
-</div>
+          <!-- Sidebar Kanan: Legend + Table -->
+          <div style="display:flex;flex-direction:column;gap:16px;width:100%;">
 
             <!-- Legenda Pidana -->
             <div class="panel">
@@ -182,7 +178,7 @@
             </div>
 
             <!-- Tabel Data -->
-            <div class="panel" style="flex:1;">
+            <div class="panel">
               <div class="panel-head">
                 <div class="ph-left">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
