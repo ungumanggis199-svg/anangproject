@@ -631,12 +631,19 @@ async function loadPrkData() {
       <div style="color:#8a9490;font-size:13px;">Memuat peta dan data perkara...</div>
     `;
   }
-if (mapEl) mapEl.style.display = 'block';
+  if (mapEl) mapEl.style.display = 'none';
+  if (tabelEl) tabelEl.innerHTML = '<div style="color:#aaa;text-align:center;padding:20px;">Memuat data...</div>';
+
+  try {
+    const data = await fetchPrkData();
+    prkAllData = data;
+
+    if (mapEl) mapEl.style.display = 'block';
     if (loadingMap) loadingMap.style.display = 'none';
 
     initPrkMap();
     
-    // PERBAIKAN: Memaksa peta mendeteksi ulang ukuran container agar full tanpa sisa abu-abu
+    // LAPISAN PERBAIKAN: Memaksa Leaflet menyegarkan ukuran penuh secara dinamis
     setTimeout(() => { 
       if (prkMap) {
         prkMap.invalidateSize(true);
@@ -795,54 +802,3 @@ if (_prkSearchEl) {
 }
 
 document.addEventListener('DOMContentLoaded', loadPrkData);
-async function loadPrkData() {
-  const loadingMap = document.getElementById('prkLoadingMap');
-  const mapEl      = document.getElementById('prkMap');
-  const tabelEl    = document.getElementById('prkTabel');
-
-  if (loadingMap) {
-    loadingMap.style.display = 'flex';
-    loadingMap.innerHTML = `
-      <div style="width:36px;height:36px;border:3px solid rgba(11,61,46,0.15);border-top-color:#0B3D2E;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
-      <div style="color:#8a9490;font-size:13px;">Memuat peta dan data perkara...</div>
-    `;
-  }
-  if (mapEl) mapEl.style.display = 'none';
-  if (tabelEl) tabelEl.innerHTML = '<div style="color:#aaa;text-align:center;padding:20px;">Memuat data...</div>';
-
-  try {
-    const data = await fetchPrkData();
-    prkAllData = data;
-
-    if (mapEl) mapEl.style.display = 'block';
-    if (loadingMap) loadingMap.style.display = 'none';
-
-    initPrkMap();
-    
-    // PERBAIKAN UTAMA: Memaksa peta merender ulang ukuran penuh secara dinamis
-    setTimeout(() => { 
-      if (prkMap) {
-        prkMap.invalidateSize(true);
-        prkMap.fitBounds(PRK_BOUNDS);
-      }
-    }, 150);
-
-    prkPopulatePidanaFilter(data);
-    prkPopulateTahunFilter(data);
-    prkPopulateExportTahun(data);
-    renderPrkMarkers(data);
-    renderPrkLegend(data);
-    renderPrkTable(data);
-    updatePrkStats(data);
-    updatePrkCharts(data);
-
-    const updEl = document.getElementById('prkLastUpdate');
-    if (updEl) {
-      const now = new Date();
-      updEl.textContent = 'Update: ' + now.toLocaleString('id-ID', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
-    }
-  } catch (err) {
-    console.error('Gagal memuat data Perkara:', err);
-    prkShowError(`Gagal memuat data perkara dari Google Sheets.<br><small style="opacity:.8;">${err.message}</small>`);
-  }
-}
