@@ -646,8 +646,10 @@ async function loadPrkData() {
   }
   if (tabelEl) tabelEl.innerHTML = '<div style="color:#aaa;text-align:center;padding:20px;">Memuat data...</div>';
 
-  // Inisialisasi peta segera di awal agar ukuran kontainer terdaftar sebelum data ditarik
-  initPrkMap();
+  // Beri jeda agar flexbox selesai menata elemen sebelum Leaflet menghitung ukuran peta
+  setTimeout(() => {
+    initPrkMap();
+  }, 50);
 
   try {
     const data = await fetchPrkData();
@@ -655,7 +657,6 @@ async function loadPrkData() {
 
     if (loadingMap) loadingMap.style.display = 'none';
 
-    // Paksa Leaflet menyegarkan ukuran peta setelah loading selesai
     setTimeout(() => {
       if (prkMap) {
         prkMap.invalidateSize(true);
@@ -682,7 +683,6 @@ async function loadPrkData() {
     prkShowError(`Gagal memuat data perkara dari Google Sheets.<br><small style="opacity:.8;">${err.message}</small>`);
   }
 }
-
 /* ============================================================
    EKSPOR INFOGRAFIS DATA PERKARA — PNG
    ============================================================ */
