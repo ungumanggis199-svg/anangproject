@@ -109,6 +109,28 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   90%{opacity:.5;}
   100%{transform:translateY(-100vh);opacity:0;}
 }
+.light.light-g{
+  background:var(--g400);
+  box-shadow:0 0 8px 2px rgba(46,154,107,.45);
+}
+
+/* one orchestrated entrance sequence — elements carry their own stagger
+   delay via the inline --d custom property, so this fires once on load
+   rather than animating continuously */
+.reveal{
+  opacity:0;
+  transform:translateY(14px);
+  animation:revealIn .7s cubic-bezier(.22,.68,0,1) forwards;
+  animation-delay:var(--d, 0s);
+}
+@keyframes revealIn{
+  to{opacity:1;transform:translateY(0);}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .orb, .light, .brand-watermark{animation:none !important;}
+  .reveal{animation:none !important;opacity:1;transform:none;}
+}
 
 /* =====================
    LAYOUT
@@ -145,6 +167,18 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   width:300px;height:300px;
   border-radius:50%;
   border:1px solid rgba(228,199,122,.14);
+}
+
+/* lambang besar, transparan, statis — kesan dokumen resmi/berkeamanan,
+   bukan dekorasi yang bergerak (lambang instansi tidak diputar/dianimasikan) */
+.brand-watermark{
+  position:absolute;
+  right:-60px;bottom:-70px;
+  width:420px;height:420px;
+  object-fit:contain;
+  opacity:.05;
+  z-index:1;
+  pointer-events:none;
 }
 
 .logo-wrapper{margin-bottom:32px;position:relative;z-index:2;}
@@ -196,6 +230,38 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   z-index:2;
 }
 
+/* baris status: elemen "hidup" yang sungguhan (jam berjalan), bukan
+   sekadar hiasan — cocok untuk sistem pemantauan/intelijen */
+.brand-status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:28px;
+  font-family:'Space Mono',monospace;
+  font-size:11px;
+  letter-spacing:.02em;
+  color:rgba(255,255,255,.5);
+  position:relative;
+  z-index:2;
+}
+.status-dot{
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--g400);
+  box-shadow:0 0 0 3px rgba(46,154,107,.25);
+  animation:statusPulse 2.2s ease infinite;
+  flex-shrink:0;
+}
+@keyframes statusPulse{
+  0%,100%{box-shadow:0 0 0 3px rgba(46,154,107,.25);}
+  50%{box-shadow:0 0 0 6px rgba(46,154,107,.08);}
+}
+.status-sep{opacity:.5;}
+.status-clock{color:var(--gold-lt);min-width:118px;}
+@media (prefers-reduced-motion: reduce){
+  .status-dot{animation:none;}
+}
+
 /* ---- RIGHT: LOGIN FORM ---- */
 .login-right{
   display:flex;
@@ -237,10 +303,24 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   color:var(--ink2);
   margin-bottom:6px;
 }
+
+.field-wrapper{position:relative;margin-bottom:18px;}
+.field-icon{
+  position:absolute;
+  left:13px;top:50%;
+  transform:translateY(-50%);
+  width:16px;height:16px;
+  color:var(--ink3);
+  opacity:.7;
+  pointer-events:none;
+  transition:color var(--t), opacity var(--t);
+}
+.field-wrapper:focus-within .field-icon{color:var(--g700);opacity:1;}
+
 #loginForm input[type="text"],
 #loginForm input[type="password"]{
   width:100%;
-  padding:12px 14px;
+  padding:12px 14px 12px 38px;
   border:1.5px solid var(--line);
   border-radius:10px;
   font-size:13.5px;
@@ -249,7 +329,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   background:#fff;
   outline:none;
   transition:border-color var(--t), box-shadow var(--t);
-  margin-bottom:18px;
 }
 #loginForm input[type="text"]:focus,
 #loginForm input[type="password"]:focus{
@@ -257,21 +336,21 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   box-shadow:0 0 0 3px rgba(46,154,107,.14);
 }
 
-.password-wrapper{
-  position:relative;
-}
-.password-wrapper input{margin-bottom:0;padding-right:42px;}
-.password-wrapper #togglePassword{
+.password-wrapper input{padding-right:40px;}
+.toggle-eye{
   position:absolute;
-  right:12px;top:50%;
+  right:9px;top:50%;
   transform:translateY(-50%);
-  font-size:16px;
-  opacity:.55;
-  user-select:none;
-  transition:opacity var(--t);
+  width:28px;height:28px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:7px;
+  color:var(--ink3);
+  opacity:.65;
+  transition:opacity var(--t), background var(--t), color var(--t);
 }
-.password-wrapper #togglePassword:hover{opacity:1;}
-.password-wrapper{margin-bottom:18px;}
+.toggle-eye svg{width:16px;height:16px;}
+.toggle-eye:hover{opacity:1;background:rgba(11,61,46,.06);color:var(--g700);}
+.toggle-eye:focus-visible{outline:2px solid var(--g400);outline-offset:1px;}
 
 .row{
   display:flex;
@@ -295,8 +374,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   transition:color var(--t), border-color var(--t);
 }
 .link-muted:hover{color:var(--g700);border-color:var(--g400);}
+.link-muted:focus-visible{outline:2px solid var(--g400);outline-offset:2px;border-radius:2px;}
 
 #loginForm button[type="submit"]{
+  position:relative;
+  overflow:hidden;
   width:100%;
   padding:13px;
   background:linear-gradient(135deg, var(--g800) 0%, var(--g700) 100%);
@@ -307,14 +389,42 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   box-shadow:0 6px 18px rgba(11,61,46,.28);
   transition:transform var(--t), box-shadow var(--t), opacity var(--t);
 }
+#loginForm button[type="submit"]::after{
+  content:'';
+  position:absolute;
+  top:0;bottom:0;left:-60%;
+  width:40%;
+  background:linear-gradient(115deg, transparent, rgba(228,199,122,.35), transparent);
+  transform:skewX(-20deg);
+  transition:left .55s ease;
+}
+#loginForm button[type="submit"]:hover::after{left:130%;}
 #loginForm button[type="submit"]:hover{
   transform:translateY(-1px);
   box-shadow:0 10px 24px rgba(11,61,46,.34);
+}
+#loginForm button[type="submit"]:focus-visible{
+  outline:2px solid var(--gold-lt);
+  outline-offset:2px;
 }
 #loginForm button[type="submit"]:disabled{
   opacity:.75;
   cursor:default;
   transform:none;
+}
+.btn-label{display:inline-flex;align-items:center;gap:8px;}
+.btn-spinner{
+  width:14px;height:14px;
+  border:2px solid rgba(255,255,255,.35);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:btnSpin .7s linear infinite;
+  flex-shrink:0;
+}
+@keyframes btnSpin{to{transform:rotate(360deg);}}
+@media (prefers-reduced-motion: reduce){
+  #loginForm button[type="submit"]::after{display:none;}
+  .btn-spinner{animation-duration:1.4s;}
 }
 
 .footer-note{
@@ -333,6 +443,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   .login-left{padding:44px 32px;}
   .login-left h1{font-size:32px;}
   .login-right{padding:32px 20px 48px;}
+  .brand-watermark{width:260px;height:260px;right:-50px;bottom:-40px;}
+  .brand-status{flex-wrap:wrap;margin-top:20px;}
 }
 @media(max-width:420px){
   .glass-card{padding:30px 22px 26px;}
