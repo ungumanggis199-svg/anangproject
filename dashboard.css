@@ -452,19 +452,26 @@ button{font-family:inherit; cursor:pointer; border:none; background:none;}
 .prk-marker:hover {
   transform: scale(1.15);
 }
-/* Menghilangkan sisa area abu-abu pada peta Leaflet */
+/* Menghilangkan sisa area abu-abu pada peta Leaflet.
+   PENTING: flex:1 (flex-basis:0%) di dalam kontainer flex bertinggi 'auto' bisa
+   membuat tinggi peta runtuh ke 0 di browser yang mendukung :has() — makanya peta
+   tampak kosong padahal data lain (legenda/tabel) berhasil dimuat. Diperbaiki
+   dengan memberi min-height pada panel dan flex-basis eksplisit pada #prkMap. */
 .panel:has(#prkMap) {
   display: flex;
   flex-direction: column;
+  min-height: 520px;
 }
 #prkMap {
   width: 100% !important;
   max-width: 100% !important;
-  flex: 1;
+  height: 520px !important;
+  flex: 1 1 520px;
 }
 .leaflet-container {
   width: 100% !important;
   height: 100% !important;
+  background: var(--paper);
 }
 
 /* =====================
@@ -497,4 +504,66 @@ button{font-family:inherit; cursor:pointer; border:none; background:none;}
   .topbar{padding:0 16px;}
   .page{padding:14px 12px 40px;}
   #page-perkara div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important;}
+  .panel:has(#prkMap){min-height:340px;}
+  #prkMap{height:340px !important;flex-basis:340px;}
+}
+
+/* =====================
+   DINAMIS & INTERAKTIF
+   ===================== */
+
+/* Angka statistik hero: transisi halus tiap kali di-update oleh count-up JS */
+.hb-stat-val, .prk-count-anim{
+  font-variant-numeric: tabular-nums;
+  transition: color var(--t);
+}
+
+/* Marker peta: ring denyut halus supaya titik kasus terasa "hidup" di peta */
+.prk-marker::before{
+  content:'';
+  position:absolute;
+  inset:-6px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(11,61,46,.28) 0%, transparent 70%);
+  animation:prkPulseRing 2.6s ease-out infinite;
+  pointer-events:none;
+}
+@keyframes prkPulseRing{
+  0%{transform:scale(.4);opacity:.55;}
+  70%{transform:scale(1.15);opacity:0;}
+  100%{transform:scale(1.15);opacity:0;}
+}
+
+/* Baris legenda & tabel: masuk bertahap (staggered fade+slide) setiap render */
+.prk-stagger{
+  opacity:0;
+  transform:translateY(6px);
+  animation:prkStaggerIn .45s cubic-bezier(.22,.68,0,1.2) forwards;
+}
+@keyframes prkStaggerIn{
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* Kartu statistik hero: sedikit "bernafas" agar terasa live/real-time */
+.hb-stat{animation:prkStatBreathe 5s ease-in-out infinite;}
+.hb-stat:nth-child(2){animation-delay:.6s;}
+@keyframes prkStatBreathe{
+  0%,100%{box-shadow:0 0 0 rgba(228,199,122,0);}
+  50%{box-shadow:0 0 18px rgba(228,199,122,.18);}
+}
+
+/* Skeleton shimmer untuk state loading tabel/legenda */
+.prk-skel{
+  height:14px;border-radius:6px;margin:6px 0;
+  background:linear-gradient(90deg, var(--g50) 25%, var(--gold-pale) 50%, var(--g50) 75%);
+  background-size:200% 100%;
+  animation:prkSkelShimmer 1.4s ease-in-out infinite;
+}
+@keyframes prkSkelShimmer{
+  0%{background-position:200% 0;}
+  100%{background-position:-200% 0;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .prk-marker::before, .hb-stat, .prk-stagger, .prk-skel{animation:none !important;}
 }
