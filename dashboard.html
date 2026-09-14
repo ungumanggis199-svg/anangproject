@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Data Perkara (SPDP) — KN Muna</title>
+<title>Data Perkara — Kejaksaan Negeri Muna</title>
 <link rel="icon" type="image/png" href="Logo-Kejaksaan2.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="dashboard.css">
@@ -31,7 +31,7 @@
       <p class="sb-section-label">Menu</p>
       <ul class="nav-list">
 
-<li class="nav-item active" data-page="perkara">
+        <li class="nav-item active" data-page="perkara">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 2 2 7l10 5 10-5-10-5z"/>
             <path d="M2 17l10 5 10-5"/>
@@ -102,19 +102,23 @@
         <!-- Header Hero Banner -->
         <div class="hero-banner" style="margin-bottom:18px;">
           <div class="hb-left">
-            <div class="hb-eyebrow">Dashboard · Data Perkara</div>
-            <div class="hb-title">Peta Sebaran Perkara<br>SPDP Wilayah Muna &amp; Buton Utara</div>
-            <div class="hb-sub">Fokus Pemetaan Berdasarkan Jenis Tindak Pidana</div>
+            <div class="hb-eyebrow">Dashboard · Intelijen Kejaksaan Negeri Muna</div>
+            <div class="hb-title">Peta Sebaran Perkara<br>Wilayah Muna &amp; Buton Utara</div>
+            <div class="hb-sub">Monitoring Berbasis Titik Koordinat Tindak Pidana</div>
           </div>
-          <div class="hb-right">
-            <div class="hb-stat" style="min-width:140px; border-color:rgba(228,199,122,0.4); background:rgba(0,0,0,0.15);">
+          <div class="hb-right" style="display:flex;gap:10px;">
+            <div class="hb-stat" style="min-width:120px; border-color:rgba(228,199,122,0.4); background:rgba(0,0,0,0.15);">
               <div class="hb-stat-val" id="prkStatTotal">—</div>
-              <div class="hb-stat-label">Total Kasus Tercatat</div>
+              <div class="hb-stat-label">Total Kasus</div>
+            </div>
+            <div class="hb-stat" style="min-width:120px; border-color:rgba(228,199,122,0.4); background:rgba(0,0,0,0.15);">
+              <div class="hb-stat-val" id="prkStatWilayah">3</div>
+              <div class="hb-stat-label">Wilayah Hukum</div>
             </div>
           </div>
-        </div> <!-- PENUTUP HERO BANNER YANG BENAR -->
+        </div>
 
-        <!-- Filter Bar (Diperbarui dengan gaya floating card) -->
+        <!-- Filter Bar -->
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center;background:rgba(255,255,255,0.9);padding:14px 18px;border-radius:12px;box-shadow:0 4px 16px rgba(11,61,46,0.06);border:1px solid rgba(226,223,213,0.8);">
           <select id="prkFilterKabupaten" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
             <option value="">Semua Kabupaten</option>
@@ -127,23 +131,15 @@
           </select>
           <select id="prkFilterBulan" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
             <option value="">Semua Bulan</option>
-            <option value="1">Januari</option>
-            <option value="2">Februari</option>
-            <option value="3">Maret</option>
-            <option value="4">April</option>
-            <option value="5">Mei</option>
-            <option value="6">Juni</option>
-            <option value="7">Juli</option>
-            <option value="8">Agustus</option>
-            <option value="9">September</option>
-            <option value="10">Oktober</option>
-            <option value="11">November</option>
-            <option value="12">Desember</option>
+            <option value="1">Januari</option><option value="2">Februari</option><option value="3">Maret</option>
+            <option value="4">April</option><option value="5">Mei</option><option value="6">Juni</option>
+            <option value="7">Juli</option><option value="8">Agustus</option><option value="9">September</option>
+            <option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option>
           </select>
           <select id="prkFilterTahun" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
             <option value="">Semua Tahun</option>
           </select>
-          <input id="prkSearch" type="text" placeholder="Cari nama tersangka / kecamatan / no. SPDP..." style="flex:1;min-width:200px;padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;outline:none;transition:border-color 0.2s;">
+          <input id="prkSearch" type="text" placeholder="Cari nama tersangka / kecamatan / no. SPDP..." style="flex:1;min-width:200px;padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;outline:none;">
           <button id="prkRefreshBtn" onclick="loadPrkData()" style="padding:8px 16px;background:linear-gradient(135deg, #0B3D2E 0%, #155A41 100%);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;box-shadow:0 4px 10px rgba(11,61,46,0.2);">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
@@ -153,16 +149,16 @@
           <span id="prkLastUpdate" style="font-size:11.5px;color:#8a9490;margin-left:4px;font-weight:500;"></span>
         </div>
 
-        <!-- Map + Sidebar Layout -->
+        <!-- Map + Sidebar Layout (Full Width & Responsive) -->
         <div style="display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;">
 
           <!-- Leaflet Map -->
           <div class="panel" style="padding:0;overflow:hidden;border-radius:14px;border:1px solid rgba(11,61,46,0.12);">
-            <div id="prkLoadingMap" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:540px;gap:12px;background:#f8faf9;">
+            <div id="prkLoadingMap" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:560px;gap:12px;background:#f8faf9;">
               <div style="width:36px;height:36px;border:3px solid rgba(11,61,46,0.15);border-top-color:#0B3D2E;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
               <div style="color:#8a9490;font-size:13px;">Memuat peta dan data perkara...</div>
             </div>
-            <div id="prkMap" style="height:540px;display:none;border-radius:14px;position:relative;z-index:1;"></div>
+            <div id="prkMap" style="width:100%;height:560px;display:none;z-index:1;"></div>
           </div>
 
           <!-- Sidebar: Legend + Table -->
@@ -178,7 +174,7 @@
                   <h3>Kategori Pidana</h3>
                 </div>
               </div>
-              <div id="prkLegend" style="font-size:12px;line-height:1.6;max-height:200px;overflow-y:auto;padding-right:5px;">
+              <div id="prkLegend" style="font-size:12px;line-height:1.6;max-height:210px;overflow-y:auto;padding-right:5px;">
                 <!-- diisi dinamis -->
               </div>
             </div>
@@ -251,7 +247,6 @@
             <span style="font-size:11.5px;color:#8a9490;">Data mengikuti filter aktif</span>
           </div>
 
-          <!-- Grid grafik diubah agar Line Chart (Tren) tampil memanjang penuh -->
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:4px 2px 8px;">
 
             <!-- Top 10 Kecamatan -->
@@ -270,7 +265,7 @@
               </div>
             </div>
 
-            <!-- Tren per Bulan (Membentang penuh/span 2 kolom) -->
+            <!-- Tren per Bulan (Lebar Penuh) -->
             <div style="grid-column: 1 / -1; background:#f8faf9;border-radius:12px;padding:16px;border:1px solid rgba(11,61,46,0.06);">
               <div style="font-size:12.5px;font-weight:700;color:#1a2e22;margin-bottom:12px;">📈 Tren Frekuensi Perkara per Bulan</div>
               <div style="position:relative;height:280px;">
@@ -345,7 +340,7 @@ document.getElementById('logoutBtn').addEventListener('click', function(e){
 });
 </script>
 
-<!-- Logika Data Perkara (peta, filter, tabel, grafik, ekspor) -->
+<!-- Logika Data Perkara -->
 <script src="perkara.js"></script>
 
 </body>
