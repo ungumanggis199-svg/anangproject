@@ -452,8 +452,14 @@ button{font-family:inherit; cursor:pointer; border:none; background:none;}
 .prk-marker:hover {
   transform: scale(1.15);
 }
+/* Paksakan elemen peta Leaflet agar mengisi penuh kontainer tanpa area abu-abu */
 #prkMap {
-  z-index: 1;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 /* =====================
