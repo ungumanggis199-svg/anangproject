@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Perkara | Kejaksaan Negeri Muna</title>
+<link rel="icon" type="image/png" href="Logo-Kejaksaan2.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="login-body">
+
+<!-- BACKGROUND ANIMATION -->
+<div class="login-bg">
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
+</div>
+
+<main class="login-container">
+
+  <!-- LEFT BRAND -->
+  <section class="login-left">
+
+    <div class="logo-wrapper">
+      <img src="Logo-Kejaksaan2.png" class="kejaksaan-logo" alt="Logo Kejaksaan">
+    </div>
+
+    <p class="eyebrow">Sistem Informasi Intelijen</p>
+    <h1>Data Perkara<br>SPDP</h1>
+    <p class="sub">
+      Kejaksaan Negeri Muna &middot; Bidang Intelijen
+    </p>
+
+    <div class="security-note">
+      Sistem ini digunakan untuk pengelolaan data perkara (SPDP) secara terbatas dan terenkripsi. Akses hanya untuk personel yang berwenang.
+    </div>
+
+  </section>
+
+  <!-- RIGHT LOGIN FORM -->
+  <section class="login-right">
+
+    <div class="glass-card">
+
+      <h2>Masuk Sistem</h2>
+      <p class="desc">Silakan login menggunakan NIP atau username resmi.</p>
+
+      <form id="loginForm">
+
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Masukkan NIP / Username" required autocomplete="username">
+
+        <label for="password">Password</label>
+
+        <div class="password-wrapper">
+          <input type="password" id="password" placeholder="Masukkan kata sandi" required autocomplete="current-password">
+          <span id="togglePassword" role="button" aria-label="Tampilkan kata sandi">&#128065;</span>
+        </div>
+
+        <div class="row">
+          <label class="remember">
+            <input type="checkbox">
+            Ingat saya
+          </label>
+
+          <a href="#" class="link-muted">Lupa password?</a>
+        </div>
+
+        <button type="submit">
+          Masuk ke Sistem
+        </button>
+
+      </form>
+
+      <div class="footer-note">
+        &copy; Kejaksaan Negeri Muna &middot; Data Perkara (SPDP)
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

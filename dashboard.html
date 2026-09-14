@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Perkara (SPDP) — KN Muna</title>
+<link rel="icon" type="image/png" href="Logo-Kejaksaan2.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dashboard.css">
+<!-- Leaflet (peta) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Brand -->
+    <div class="sb-brand">
+      <img src="Logo-Kejaksaan2.png" alt="Logo Kejaksaan" class="sb-logo" onerror="this.style.display='none'">
+      <div class="sb-brand-text">
+        <div class="sb-inst">Kejaksaan RI</div>
+        <div class="sb-name">Kejaksaan Negeri Muna</div>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sb-nav">
+      <p class="sb-section-label">Menu</p>
+      <ul class="nav-list">
+
+        <li class="nav-item active" data-page="perkara">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2 2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+          Data Perkara
+          <span class="nav-badge" style="background:#D94A4A;">SPDP</span>
+        </li>
+
+      </ul>
+    </nav>
+
+    <!-- Footer -->
+    <div class="sb-footer">
+      <div class="berakhlak-card">
+        <div class="bak-tag">Trapsila Adhyaksa</div>
+        <div class="bak-title">BerAKHLAK</div>
+        <div class="bak-desc">Berorientasi Pelayanan, Akuntabel, Kompeten, Harmonis, Loyal, Adaptif, Kolaboratif</div>
+      </div>
+      <div class="sb-online">
+        <span class="online-dot"></span>
+        Sistem aktif
+      </div>
+      <a href="index.html" class="sb-logout" id="logoutBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Keluar dari sistem
+      </a>
+    </div>
+
+  </aside>
+  <!-- /SIDEBAR -->
+
+
+  <!-- ============ MAIN AREA ============ -->
+  <div class="main-area">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <img src="Logo-Kejaksaan2.png" alt="" style="width:28px;opacity:.7;" onerror="this.style.display='none'">
+      </div>
+      <div class="topbar-hero">
+        <div class="th-eyebrow">Sistem Informasi</div>
+        <h1>Data Perkara &nbsp;·&nbsp; Kejaksaan Negeri Muna</h1>
+      </div>
+      <div class="topbar-right">
+        <div class="user-chip" id="userChip">
+          <div class="user-av" id="userAv">AD</div>
+          <div>
+            <div class="user-chip-name" id="userChipName">Admin</div>
+            <div class="user-chip-role" id="userChipRole">Intelijen</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- SCROLLABLE CONTENT -->
+    <div class="content">
+
+      <!-- ==================
+           PAGE: DATA PERKARA (SPDP)
+           ================== -->
+      <section class="page active" id="page-perkara">
+
+        <!-- Header -->
+        <div class="hero-banner" style="margin-bottom:14px;">
+          <div class="hb-left">
+            <div class="hb-eyebrow">Dashboard · Data Perkara</div>
+            <div class="hb-title">Peta Sebaran Perkara<br>SPDP Wilayah Muna &amp; Buton Utara</div>
+            <div class="hb-sub">Rekap Surat Pemberitahuan Dimulainya Penyidikan (SPDP)</div>
+          </div>
+          <div class="hb-right">
+            <div class="hb-stat">
+              <div class="hb-stat-val" id="prkStatTotal">—</div>
+              <div class="hb-stat-label">Total Perkara</div>
+            </div>
+            <div class="hb-stat">
+              <div class="hb-stat-val" id="prkStatTahap2">—</div>
+              <div class="hb-stat-label">Menjadi Berkas (Tahap 2)</div>
+            </div>
+            <div class="hb-stat">
+              <div class="hb-stat-val" id="prkStatSp3">—</div>
+              <div class="hb-stat-label">Dihentikan (SP-3)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center;">
+          <select id="prkFilterKabupaten" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+            <option value="">Semua Kabupaten</option>
+            <option value="MUNA">Kab. Muna</option>
+            <option value="MUNA BARAT">Kab. Muna Barat</option>
+            <option value="BUTON UTARA">Kab. Buton Utara</option>
+          </select>
+          <select id="prkFilterStatus" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+            <option value="">Semua Status Laporan</option>
+            <option value="TAHAP 1">Tahap 1</option>
+            <option value="TAHAP 2">Tahap 2</option>
+            <option value="PENGEMBALIAN SPDP">Pengembalian SPDP</option>
+            <option value="DIHENTIKAN (SP-3)">Dihentikan (SP-3)</option>
+          </select>
+          <select id="prkFilterPidana" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;max-width:220px;">
+            <option value="">Semua Jenis Pidana</option>
+          </select>
+          <select id="prkFilterBulan" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+            <option value="">Semua Bulan</option>
+            <option value="1">Januari</option>
+            <option value="2">Februari</option>
+            <option value="3">Maret</option>
+            <option value="4">April</option>
+            <option value="5">Mei</option>
+            <option value="6">Juni</option>
+            <option value="7">Juli</option>
+            <option value="8">Agustus</option>
+            <option value="9">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">Desember</option>
+          </select>
+          <select id="prkFilterTahun" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+            <option value="">Semua Tahun</option>
+          </select>
+          <input id="prkSearch" type="text" placeholder="Cari nama tersangka / kecamatan / no. SPDP..." style="flex:1;min-width:200px;padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;outline:none;">
+          <button id="prkRefreshBtn" onclick="loadPrkData()" style="padding:8px 16px;background:#0B3D2E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:6px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+            </svg>
+            Refresh Data
+          </button>
+          <span id="prkLastUpdate" style="font-size:12px;color:#8a9490;margin-left:4px;"></span>
+        </div>
+
+        <!-- Map + Sidebar Layout -->
+        <div style="display:grid;grid-template-columns:1fr 320px;gap:14px;align-items:start;">
+
+          <!-- Leaflet Map -->
+          <div class="panel" style="padding:0;overflow:hidden;border-radius:14px;">
+            <div id="prkLoadingMap" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:520px;gap:12px;background:#f8faf9;">
+              <div style="width:36px;height:36px;border:3px solid rgba(11,61,46,0.15);border-top-color:#0B3D2E;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+              <div style="color:#8a9490;font-size:13px;">Memuat peta dan data perkara...</div>
+            </div>
+            <div id="prkMap" style="height:520px;display:none;border-radius:14px;"></div>
+          </div>
+
+          <!-- Sidebar: Legend + Table -->
+          <div style="display:flex;flex-direction:column;gap:12px;">
+
+            <!-- Legenda Status -->
+            <div class="panel">
+              <div class="panel-head">
+                <div class="ph-left">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
+                  </svg>
+                  <h3>Legenda Status Laporan</h3>
+                </div>
+              </div>
+              <div id="prkLegend" style="font-size:12px;line-height:1.6;">
+                <!-- diisi dinamis -->
+              </div>
+            </div>
+
+            <!-- Tabel Data -->
+            <div class="panel" style="flex:1;">
+              <div class="panel-head">
+                <div class="ph-left">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+                    <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+                    <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+                  </svg>
+                  <h3>Daftar Perkara</h3>
+                </div>
+                <span id="prkDataCount" class="panel-tag">0 data</span>
+              </div>
+              <div id="prkTabel" style="font-size:12px;">
+                <div style="color:#aaa;text-align:center;padding:20px;">Memuat data...</div>
+              </div>
+            </div>
+
+          </div>
+          <!-- /sidebar -->
+
+        </div>
+        <!-- /map layout -->
+
+        <!-- ==== Ekspor Infografis ==== -->
+        <div class="panel" style="margin-top:14px;">
+          <div class="panel-head">
+            <div class="ph-left">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              <h3>Ekspor Infografis Data Perkara</h3>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:4px 2px 8px;">
+            <select id="expFilterBulan" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+              <option value="">Semua Bulan</option>
+              <option value="1">Januari</option><option value="2">Februari</option><option value="3">Maret</option>
+              <option value="4">April</option><option value="5">Mei</option><option value="6">Juni</option>
+              <option value="7">Juli</option><option value="8">Agustus</option><option value="9">September</option>
+              <option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option>
+            </select>
+            <select id="expFilterTahun" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+              <option value="">Semua Tahun</option>
+            </select>
+            <select id="expFilterKabupaten" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+              <option value="">Semua Kabupaten</option>
+              <option value="MUNA">Kab. Muna</option>
+              <option value="MUNA BARAT">Kab. Muna Barat</option>
+              <option value="BUTON UTARA">Kab. Buton Utara</option>
+            </select>
+            <button id="expDownloadBtn" onclick="prkDownloadInfografis()" style="padding:8px 18px;background:#B8902E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:7px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Unduh Infografis (PNG)
+            </button>
+            <span style="font-size:11.5px;color:#8a9490;">Ringkasan visual periode terpilih — tanpa narasi panjang</span>
+          </div>
+        </div>
+        <!-- /Ekspor Infografis -->
+
+        <!-- ==== Statistik & Analisis ==== -->
+        <div class="panel" style="margin-top:14px;">
+          <div class="panel-head">
+            <div class="ph-left">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+                <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+              </svg>
+              <h3>Statistik &amp; Analisis Data Perkara</h3>
+            </div>
+            <span style="font-size:11.5px;color:#8a9490;">Mengikuti filter aktif di atas</span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:4px 2px 8px;">
+
+            <!-- Top 10 Kecamatan -->
+            <div style="background:#f8faf9;border-radius:12px;padding:14px;">
+              <div style="font-size:12.5px;font-weight:700;color:#1a2e22;margin-bottom:8px;">🏘️ 10 Kecamatan Perkara Terbanyak</div>
+              <div style="position:relative;height:280px;">
+                <canvas id="prkChartKecamatan"></canvas>
+              </div>
+            </div>
+
+            <!-- Top 10 Jenis Pidana -->
+            <div style="background:#f8faf9;border-radius:12px;padding:14px;">
+              <div style="font-size:12.5px;font-weight:700;color:#1a2e22;margin-bottom:8px;">⚖️ 10 Jenis Pidana Terbanyak</div>
+              <div style="position:relative;height:280px;">
+                <canvas id="prkChartPidana"></canvas>
+              </div>
+            </div>
+
+            <!-- Distribusi Status Laporan -->
+            <div style="background:#f8faf9;border-radius:12px;padding:14px;">
+              <div style="font-size:12.5px;font-weight:700;color:#1a2e22;margin-bottom:8px;">📌 Distribusi Status Laporan</div>
+              <div style="position:relative;height:260px;display:flex;align-items:center;justify-content:center;">
+                <canvas id="prkChartStatus"></canvas>
+              </div>
+            </div>
+
+            <!-- Tren per Bulan -->
+            <div style="background:#f8faf9;border-radius:12px;padding:14px;">
+              <div style="font-size:12.5px;font-weight:700;color:#1a2e22;margin-bottom:8px;">📈 Tren Perkara per Bulan</div>
+              <div style="position:relative;height:260px;">
+                <canvas id="prkChartTren"></canvas>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- /Statistik & Analisis -->
+
+      </section>
+      <!-- /PAGE DATA PERKARA -->
+
+      <!-- MODAL "LIHAT SEMUA DATA" -->
+      <div id="prkFullListModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:999;align-items:center;justify-content:center;">
+        <div style="background:#fff;border-radius:14px;padding:22px;max-width:460px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+            <h3 id="prkFullListModalTitle" style="margin:0;font-size:15px;color:#0B3D2E;"></h3>
+            <button onclick="document.getElementById('prkFullListModal').style.display='none'" style="background:none;border:none;cursor:pointer;font-size:20px;color:#888;">×</button>
+          </div>
+          <div id="prkFullListModalContent"></div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /content -->
+
+  </div>
+  <!-- /MAIN AREA -->
+
+</div>
+<!-- /app-shell -->
+
+<!-- Chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<!-- html2canvas (ekspor infografis PNG) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<!-- Leaflet (peta) -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+/* =====================
+   SESSION GUARD
+   ===================== */
+(function(){
+  const s = localStorage.getItem('intel_session');
+  if(!s){
+    window.location.href = 'index.html';
+    return;
+  }
+  try{
+    const d = JSON.parse(s);
+    const el = document.getElementById('userAv');
+    const nm = document.getElementById('userChipName');
+    const rl = document.getElementById('userChipRole');
+    if(d.username){
+      const initials = d.username.slice(0,2).toUpperCase();
+      if(el) el.textContent = initials;
+      if(nm) nm.textContent = d.username;
+      if(rl) rl.textContent = d.role || 'Intelijen';
+    }
+  }catch(e){}
+})();
+
+/* =====================
+   LOGOUT
+   ===================== */
+document.getElementById('logoutBtn').addEventListener('click', function(e){
+  e.preventDefault();
+  localStorage.removeItem('intel_session');
+  window.location.href = 'index.html';
+});
+</script>
+
+<!-- Logika Data Perkara (peta, filter, tabel, grafik, ekspor) -->
+<script src="perkara.js"></script>
+
+</body>
+</html>
